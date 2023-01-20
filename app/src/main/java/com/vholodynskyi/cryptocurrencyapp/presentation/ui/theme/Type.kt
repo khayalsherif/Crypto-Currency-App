@@ -1,4 +1,4 @@
-package com.vholodynskyi.cryptocurrencyapp.ui.theme
+package com.vholodynskyi.cryptocurrencyapp.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
