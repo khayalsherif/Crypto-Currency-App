@@ -10,13 +10,13 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class GetCoinsUseCase @Inject constructor(
-    private val repository: CoinRepository
+class GetCoinsUseCase(
+    private val repository: dagger.Lazy<CoinRepository>
 ) {
     operator fun invoke(): Flow<Resource<List<Coin>>> = flow {
         try {
             emit(Resource.Loading<List<Coin>>())
-            val coins = repository.getCoins().map { it.toCoin() }
+            val coins = repository.get().getCoins().map { it.toCoin() }
             emit(Resource.Success<List<Coin>>(coins))
         } catch (e: HttpException) {
             emit(Resource.Error<List<Coin>>(e.localizedMessage ?: "An unexpected error occured"))

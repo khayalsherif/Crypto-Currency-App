@@ -7,14 +7,14 @@ import com.vholodynskyi.cryptocurrencyapp.domain.repository.CoinRepository
 import javax.inject.Inject
 
 class CoinRepositoryImpl @Inject constructor(
-    private val api: CoinPaprikaApi
+    private val api: dagger.Lazy<CoinPaprikaApi>
 ) : CoinRepository {
 
     override suspend fun getCoins(): List<CoinDto> {
-        return api.getCoins()
+        return api.get().getCoins()
     }
 
     override suspend fun getCoinById(coinId: String): CoinDetailDto {
-        return api.getCoinById(coinId)
+        return api.get().getCoinById(coinId)
     }
 }

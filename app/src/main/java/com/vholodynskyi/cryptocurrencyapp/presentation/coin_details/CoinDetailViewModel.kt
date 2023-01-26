@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
-    private val getCoinUseCase: GetCoinUseCase,
+    private val getCoinUseCase: dagger.Lazy<GetCoinUseCase>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -29,7 +29,7 @@ class CoinDetailViewModel @Inject constructor(
     }
 
     private fun getCoin(coinId: String) {
-        getCoinUseCase(coinId)
+        getCoinUseCase.get().invoke(coinId)
             .onEach { result ->
                 _state.value = when (result) {
                     is Resource.Error -> CoinDetailState(error = result.message ?: "")

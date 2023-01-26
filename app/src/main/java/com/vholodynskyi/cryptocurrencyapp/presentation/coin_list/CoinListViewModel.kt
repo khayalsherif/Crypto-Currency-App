@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoinListViewModel @Inject constructor(
-    private val getCoinsUseCase: GetCoinsUseCase
+    private val getCoinsUseCase: dagger.Lazy<GetCoinsUseCase>
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CoinListState())
@@ -24,13 +24,12 @@ class CoinListViewModel @Inject constructor(
     }
 
     private fun getCoins() {
-        getCoinsUseCase()
-            .onEach { result ->
-                _state.value = when (result) {
-                    is Resource.Error -> CoinListState(error = result.message ?: "")
-                    is Resource.Loading -> CoinListState(isLoading = true)
-                    is Resource.Success -> CoinListState(coins = result.data ?: emptyList())
-                }
-            }.launchIn(viewModelScope)
+        getCoinsUseCase.get().invoke().onEach { result ->
+            _state.value = when (result) {
+                is Resource.Error -> CoinListState(error = result.message ?: "")
+                is Resource.Loading -> CoinListState(isLoading = true)
+                is Resource.Success -> CoinListState(coins = result.data ?: emptyList())
+            }
+        }.launchIn(viewModelScope)
     }
 }
